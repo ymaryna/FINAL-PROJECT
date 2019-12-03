@@ -8,66 +8,36 @@ const placeSchema = new mongoose.Schema({
     },
     Localization: {
       type: String,
-      required: [true, 'Email is required'],
+      latitude: String,
+      length: String,
+      country: String,
+      continent: String,
       unique: true,
       trim: true,
-      lowercase: true,
-      match: [EMAIL_PATTERN, 'Email is invalid']
     },
-    username: {
+    Images: {
+      type: [String]
+    },
+    Information: {
       type: String,
-      required: [true, 'Username is required'],
-      unique: true,
-      trim: true,
-      lowercase: true
-    },
-    password: {
-      type: String,
-      required: [true, 'Password is required'],
-      minlength: [8, 'Password needs at last 8 chars']
-    },
-    avatar: {
-      type: String,
-    },
-    validateToken: {
-      type: String,
-      default: generateRandomToken
-    },
-    validated: {
-      type: Boolean,
-      default: false
+      description: String,
+      hotSpots: [{
+        name: String,
+        location: {
+          type: String,
+          latitude: String,
+          length: String,
+        },
+        images:[String],
+        description: String
+      }]
     }
   }, { timestamps: true })
 
-  userSchema.pre('save', function (next) {
-    const user = this;
-  
-    if (user.isModified('password')) {
-      bcrypt.genSalt(SALT_WORK_FACTOR)
-        .then(salt => {
-          return bcrypt.hash(user.password, salt)
-            .then(hash => {
-              user.password = hash;
-              next();
-            });
-        })
-        .catch(error => next(error));
-    } else {
-      next();
-    }
+  placeSchema.pre('save', function (next) {
+    next();
   });
   
-  userSchema.methods.checkPassword = function (password) {
-    return bcrypt.compare(password, this.password);
-  }
+  const Place = mongoose.model('place', placeSchema);
   
-  userSchema.virtual('places', {
-    ref: 'Place',
-    localField: '_id',
-    foreignField: 'user',
-    justOne: false,
-  });
-  
-  const User = mongoose.model('User', userSchema);
-  
-  module.exports = User;
+  module.exports = Place;
