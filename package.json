@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/ymaryna/FINAL-PROJECT#readme",
   "dependencies": {
-    "bcrypt": "^3.0.7",
+    "bcrypt": "^5.0.0",
     "cloudinary": "^1.17.0",
     "connect-mongo": "^3.2.0",
     "cookie-parser": "^1.4.4",
